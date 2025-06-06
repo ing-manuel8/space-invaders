@@ -358,6 +358,8 @@ class SpaceInvaders(object):
         self.life3 = Life(769, 3)
         self.livesGroup = sprite.Group(self.life1, self.life2, self.life3)
 
+        self.message = ""  # <-- Agrega un atributo para el mensaje
+
     def reset(self, score):
         self.player = Ship()
         self.playerGroup = sprite.Group(self.player)
@@ -467,6 +469,12 @@ class SpaceInvaders(object):
             self.allSprites.add(self.enemyBullets)
             self.timer = time.get_ticks()
 
+    def show_score_message(self):
+        # Muestra el mensaje si existe
+        if self.message:
+            msg_text = Text(FONT, 30, self.message, YELLOW, 300, 50)
+            msg_text.draw(self.screen)
+
     def calculate_score(self, row):
         scores = {0: 30,
                   1: 20,
@@ -478,6 +486,19 @@ class SpaceInvaders(object):
 
         score = scores[row]
         self.score += score
+
+        # Lógica para mostrar mensajes según el puntaje
+        if self.score >= 200:
+            self.message = "ERES EL MASTER"
+        elif self.score >= 150:
+            self.message = "ERES UN EXPERTO"
+        elif self.score >= 100:
+            self.message = "ERES BUENO"
+        elif self.score >= 50:
+            self.message = "VAS BIEN"
+        else:
+            self.message = ""
+
         return score
 
     def create_main_menu(self):
@@ -621,6 +642,7 @@ class SpaceInvaders(object):
                     self.scoreText.draw(self.screen)
                     self.scoreText2.draw(self.screen)
                     self.livesText.draw(self.screen)
+                    self.show_score_message()  # <-- Agrega esta línea para mostrar el mensaje
                     self.check_input()
                     self.enemies.update(currentTime)
                     self.allSprites.update(self.keys, currentTime)
